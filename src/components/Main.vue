@@ -1,116 +1,92 @@
 <template>
   <div>
-    <p>
-      左右：
-      <span id="alpha">0</span>
-    </p>
-    <p>
-      前后：
-      <span id="beta">0</span>
-    </p>
-    <p>
-      扭转：
-      <span id="gamma">0</span>
-    </p>
-    <p>
-      指北针指向：
-      <span id="heading">0</span>度
-    </p>
-    <p>
-      指北针精度：
-      <span id="accuracy">0</span>度
-    </p>
-    <hr />
-    <p>
-      x轴加速度：
-      <span id="x">0</span>米每二次方秒
-    </p>
-    <p>
-      y轴加速度：
-      <span id="y">0</span>米每二次方秒
-    </p>
-    <p>
-      z轴加速度：
-      <span id="z">0</span>米每二次方秒
-    </p>
-    <hr />
-    <p>
-      x轴加速度(考虑重力加速度)：
-      <span id="xg">0</span>米每二次方秒
-    </p>
-    <p>
-      y轴加速度(考虑重力加速度)：
-      <span id="yg">0</span>米每二次方秒
-    </p>
-    <p>
-      z轴加速度(考虑重力加速度)：
-      <span id="zg">0</span>米每二次方秒
-    </p>
-    <hr />
-    <p>
-      左右旋转速度：
-      <span id="Ralpha">0</span>度每秒
-    </p>
-    <p>
-      前后旋转速度：
-      <span id="Rbeta">0</span>度每秒
-    </p>
-    <p>
-      扭转速度：
-      <span id="Rgamma">0</span>度每秒
-    </p>
-    <hr />
-    <p>
-      上次收到通知的间隔：
-      <span id="interval">0</span>毫秒
-    </p>
+    <canvas></canvas>
+    <p>Hold mouse down or frown</p>
   </div>
 </template>
 
 <script>
+import Orb from './Orb'
+
 export default {
   name: 'Main',
   data() {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      canvas: null,
+      context: null,
+      orbs: []
     }
   },
   mounted() {
-    if (window.DeviceMotionEvent) {
-      window.addEventListener("devicemotion", this.motionHandler, false);
-    } else {
-      document.body.innerHTML = "What user agent u r using???";
-    }
-
-    if (window.DeviceOrientationEvent) {
-      window.addEventListener("deviceorientation", this.orientationHandler, false);
-    } else {
-      document.body.innerHTML = "What user agent u r using???";
-    };
+    this.init();
+    this.initOrb();
+    this.initEventListener();
   },
   methods: {
-    orientationHandler(event) {
-      document.getElementById("alpha").innerHTML = event.alpha;
-      document.getElementById("beta").innerHTML = event.beta;
-      document.getElementById("gamma").innerHTML = event.gamma;
-      document.getElementById("heading").innerHTML = event.webkitCompassHeading;
-      document.getElementById("accuracy").innerHTML = event.webkitCompassAccuracy;
+    init() {
+      this.canvas = document.querySelector('canvas');
+      this.context = this.canvas.getContext('2d');
+      this.canvas.pullTowardsMouse = false;
 
+      this.canvas.width = window.innerWidth;
+      this.canvas.height = window.innerHeight;
     },
-    motionHandler(event) {
-      document.getElementById("interval").innerHTML = event.interval;
-      var acc = event.acceleration;
-      document.getElementById("x").innerHTML = acc.x;
-      document.getElementById("y").innerHTML = acc.y;
-      document.getElementById("z").innerHTML = acc.z;
-      var accGravity = event.accelerationIncludingGravity;
-      document.getElementById("xg").innerHTML = accGravity.x;
-      document.getElementById("yg").innerHTML = accGravity.y;
-      document.getElementById("zg").innerHTML = accGravity.z;
-      var rotationRate = event.rotationRate;
-      document.getElementById("Ralpha").innerHTML = rotationRate.alpha;
-      document.getElementById("Rbeta").innerHTML = rotationRate.beta;
-      document.getElementById("Rgamma").innerHTML = rotationRate.gamma;
+
+    initOrb() {
+      var fillColors = [
+        "#2A3B30",
+        "#ABFFD1",
+        "#EBFFF5",
+        "#9DFEFF",
+        "#273B40"
+      ];
+
+      for (var i = 0; i < 50; i++) {
+        this.orbs.push(new Orb(Math.floor((Math.random() * 50) + 10), fillColors[Math.floor(Math.random() * 5)], this.canvas));
+      }
+      this.animate();
+    },
+
+    initEventListener() {
+      var mouseX = this.canvas.width / 2;
+      var mouseY = this.canvas.height / 2;
+
+      window.addEventListener("mousemove", function (e) {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+      });
+
+      window.addEventListener("mousedown", e => {
+        this.canvas.pullTowardsMouse = true;
+      });
+
+      window.addEventListener("mouseup", e => {
+        this.canvas.pullTowardsMouse = false;
+
+        this.orbs.forEach(function (orb) {
+          var xPositiveOrNegative = Math.random() < 0.5 ? -1 : 1;
+          var yPositiveOrNegative = Math.random() < 0.5 ? -1 : 1;
+          orb.xVelocity = xPositiveOrNegative * orb.xVelocity;
+          orb.yVelocity = yPositiveOrNegative * orb.yVelocity;
+        });
+      });
+
+      window.addEventListener("resize", e => {
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
+      });
+    },
+
+    animate() {
+      clearTimeout(this.animate);
+      setTimeout(this.animate, 10);
+
+      this.context.fillStyle = "rgba(0,0,0,0.25)";
+      this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+      this.orbs.forEach(function (orb) {
+        orb.update();
+      });
     }
   }
 }
@@ -118,4 +94,18 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+body {
+  margin: 0;
+  overflow: hidden;
+}
+canvas {
+  background: black;
+}
+p {
+  position: absolute;
+  top: 8px;
+  left: 30px;
+  color: white;
+  font-family: "Source Sans Pro";
+}
 </style>
