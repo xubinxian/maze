@@ -81,7 +81,7 @@ export default {
       clearTimeout(this.animate);
       setTimeout(this.animate, 10);
 
-      this.context.fillStyle = "rgba(0,0,0,0.25)";
+      this.context.fillStyle = "#3c4a61";
       this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
       this.orbs.forEach(function (orb) {
@@ -91,21 +91,3 @@ export default {
   }
 }
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-body {
-  margin: 0;
-  overflow: hidden;
-}
-canvas {
-  background: black;
-}
-p {
-  position: absolute;
-  top: 8px;
-  left: 30px;
-  color: white;
-  font-family: "Source Sans Pro";
-}
-</style>
