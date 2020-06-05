@@ -15,16 +15,16 @@ export default function Orb(radius, fillColor, canvas) {
     this.friction = .83;
 
     this.update = function () {
-        if (this.canvas.orientation && this.canvas.montion) {
+        if (this.canvas.orientation) {
             if (canvas.orientation.gamma > 0) {
-                this.xCoordinate += this.canvas.montion.accelerationIncludingGravity.x;
+                this.xCoordinate += 2 + 3 * Math.random();
             } else if (canvas.orientation.gamma < 0) {
-                this.xCoordinate -= this.canvas.montion.accelerationIncludingGravity.x;
+                this.xCoordinate -= 2 + 3 * Math.random();
             }
             if (canvas.orientation.beta > 0) {
-                this.yCoordinate += this.canvas.montion.accelerationIncludingGravity.y;
+                this.yCoordinate += 2 + 3 * Math.random();
             } else if (canvas.orientation.beta < 0) {
-                this.yCoordinate -= this.canvas.montion.accelerationIncludingGravity.y;
+                this.yCoordinate -= 2 + 3 * Math.random();
             }
             // Prevent orbs from going off screen
             this.xCoordinate = Math.max(Math.min(this.xCoordinate, canvas.width - this.radius), 0 + this.radius);
