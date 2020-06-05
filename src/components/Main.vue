@@ -103,8 +103,8 @@ export default {
       clearTimeout(this.animate);
       setTimeout(this.animate, 10);
 
-      this.context.fillStyle = "#b25d25";
-      this.stageMG.clear();
+      // this.context.fillStyle = "#b25d25";
+      // this.stageMG.clear();
       // this.stageMG.stage1();
 
       this.orbs.forEach(function (orb) {
