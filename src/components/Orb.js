@@ -15,17 +15,42 @@ export default function Orb(radius, fillColor, canvas) {
     this.friction = .83;
     this.speed = 4.85;
 
+    this.randomColor = function () {
+        return `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, ${0.1 + Math.random()})`;
+    }
+
+    this.fillColor = [
+        [0.1, '#993333'],
+        [0.2, '#997e33'],
+        [0.3, '#939933'],
+        [0.4, '#569933'],
+        [0.5, '#339944'],
+        [0.6, '#339986'],
+        [0.7, '#336199'],
+        [0.8, '#5a3399'],
+        [0.9, '#993396']
+    ];
+
+    this.sortColor = function (positive) {
+        if (positive) {
+            this.fillColor.unshift(this.fillColor.pop());
+        } else {
+            this.fillColor.push(this.fillColor.shift());
+        }
+        this.fillColor.forEach((color, i) => color[0] = 0.1 * i);
+    }
+
     this.update = function () {
         if (this.canvas.orientation) {
             if (canvas.orientation.gamma > 0) {
-                this.xCoordinate += this.speed;
+                this.sortColor(true);
             } else if (canvas.orientation.gamma < 0) {
-                this.xCoordinate -= this.speed;
+                this.sortColor();
             }
             if (canvas.orientation.beta > 0) {
-                this.yCoordinate += this.speed;
+                this.sortColor(true);
             } else if (canvas.orientation.beta < 0) {
-                this.yCoordinate -= this.speed;
+                this.sortColor();
             }
             // Prevent orbs from going off screen
             this.xCoordinate = Math.max(Math.min(this.xCoordinate, canvas.width - this.radius), 0 + this.radius);
@@ -38,9 +63,8 @@ export default function Orb(radius, fillColor, canvas) {
         // Create gradients  
         var ctx = this.context;
         var radgrad = ctx.createRadialGradient(this.xCoordinate, this.yCoordinate, 0, this.xCoordinate, this.yCoordinate, radius);
-        radgrad.addColorStop(0, '#eacb76');
-        radgrad.addColorStop(0.9, '#ff4e20');
-        radgrad.addColorStop(1, '#3d3b4f');
+        radgrad.addColorStop(1, '#000222');
+        this.fillColor.forEach(color => radgrad.addColorStop(...color));
 
         ctx.fillStyle = radgrad;
         ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
