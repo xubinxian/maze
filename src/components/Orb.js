@@ -14,43 +14,48 @@ export default function Orb(radius, fillColor, canvas) {
     this.yShift = 0;
     this.friction = .83;
     this.speed = 4.85;
-
-    this.randomColor = function () {
-        return `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, ${0.1 + Math.random()})`;
-    }
-
-    this.fillColor = [
-        [0.1, '#993333'],
-        [0.2, '#997e33'],
-        [0.3, '#939933'],
-        [0.4, '#569933'],
-        [0.5, '#339944'],
-        [0.6, '#339986'],
-        [0.7, '#336199'],
-        [0.8, '#5a3399'],
-        [0.9, '#993396']
-    ];
-
-    this.sortColor = function (positive) {
-        if (positive) {
-            this.fillColor.unshift(this.fillColor.pop());
-        } else {
-            this.fillColor.push(this.fillColor.shift());
-        }
-        this.fillColor.forEach((color, i) => color[0] = 0.1 * i);
-    }
+    this.color0 = {
+        r: 234,
+        g: 203,
+        b: 118
+    };
+    this.color09 = {
+        r: 255,
+        g: 78,
+        b: 32
+    };
 
     this.update = function () {
         if (this.canvas.orientation) {
             if (canvas.orientation.gamma > 0) {
-                this.sortColor(true);
+                // this.xCoordinate += this.speed;
+                for (let key in this.color0) {
+                    if (this.color0[key] < 255) {
+                        this.color0[key] += 0.1;
+                    }
+                }
             } else if (canvas.orientation.gamma < 0) {
-                this.sortColor();
+                // this.xCoordinate -= this.speed;
+                for (let key in this.color0) {
+                    if (this.color0[key] > 0) {
+                        this.color0[key] -= 0.1;
+                    }
+                }
             }
             if (canvas.orientation.beta > 0) {
-                this.sortColor(true);
+                // this.yCoordinate += this.speed;
+                for (let key in this.color09) {
+                    if (this.color09[key] < 255) {
+                        this.color09[key] += 0.1;
+                    }
+                }
             } else if (canvas.orientation.beta < 0) {
-                this.sortColor();
+                // this.yCoordinate -= this.speed;
+                for (let key in this.color09) {
+                    if (this.color09[key] > 0) {
+                        this.color09[key] -= 0.1;
+                    }
+                }
             }
             // Prevent orbs from going off screen
             this.xCoordinate = Math.max(Math.min(this.xCoordinate, canvas.width - this.radius), 0 + this.radius);
@@ -63,8 +68,10 @@ export default function Orb(radius, fillColor, canvas) {
         // Create gradients  
         var ctx = this.context;
         var radgrad = ctx.createRadialGradient(this.xCoordinate, this.yCoordinate, 0, this.xCoordinate, this.yCoordinate, radius);
-        radgrad.addColorStop(1, '#000222');
-        this.fillColor.forEach(color => radgrad.addColorStop(...color));
+        console.log(this.color0)
+        radgrad.addColorStop(0, `rgb(${this.color0.r}, ${this.color0.g}, ${this.color0.b})`);
+        radgrad.addColorStop(0.9, `rgb(${this.color09.r}, ${this.color09.g}, ${this.color09.b})`);
+        radgrad.addColorStop(1, '#3d3b4f');
 
         ctx.fillStyle = radgrad;
         ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
