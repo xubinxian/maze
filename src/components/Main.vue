@@ -70,7 +70,7 @@ export default {
     },
 
     orientationHandler(event) {
-      this.canvas.loc = event;
+      this.canvas.orientation = event;
       // document.getElementById("alpha").innerHTML = event.alpha;
       // document.getElementById("beta").innerHTML = event.beta;
       // document.getElementById("gamma").innerHTML = event.gamma;
@@ -79,6 +79,7 @@ export default {
 
     },
     motionHandler(event) {
+      this.canvas.montion = event;
       // document.getElementById("interval").innerHTML = event.interval;
       // var acc = event.acceleration;
       // document.getElementById("x").innerHTML = acc.x;
