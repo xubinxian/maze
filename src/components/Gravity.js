@@ -10,7 +10,7 @@ export default {
       window.addEventListener("deviceorientation", this.orientationHandler, false);
     } else {
       document.body.innerHTML = "What user agent u r using???";
-    };
+    }
   },
   orientationHandler(event) {
     document.getElementById("alpha").innerHTML = event.alpha;

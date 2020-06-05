@@ -28,8 +28,7 @@ export default {
     init() {
       this.canvas = document.querySelector("canvas");
       this.context = this.canvas.getContext("2d");
-      this.canvas.style.backgroundColor = "#3d3b4f";
-      this.canvas.pullTowardsMouse = false;
+      this.canvas.style.backgroundColor = "#223";
 
       this.canvas.width = window.innerWidth;
       this.canvas.height = window.innerHeight;
@@ -41,8 +40,8 @@ export default {
       for (var i = 0; i < 1; i++) {
         this.orbs.push(
           new Orb(
-            this.canvas.width / 36,
-            fillColors[Math.floor(Math.random() * 5)],
+            this.canvas.width / 18,
+            '#d9b611',
             this.canvas
           )
         );
@@ -51,28 +50,18 @@ export default {
     },
 
     initEventListener() {
-      var mouseX = this.canvas.width / 2;
-      var mouseY = this.canvas.height / 2;
 
-      window.addEventListener("mousemove", function(e) {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-      });
+      if (window.DeviceMotionEvent) {
+        window.addEventListener("devicemotion", this.motionHandler, false);
+      } else {
+        alert("Oops!! What user agent u r using???");
+      }
 
-      window.addEventListener("mousedown", e => {
-        this.canvas.pullTowardsMouse = true;
-      });
-
-      window.addEventListener("mouseup", e => {
-        this.canvas.pullTowardsMouse = false;
-
-        this.orbs.forEach(function(orb) {
-          var xPositiveOrNegative = Math.random() < 0.5 ? -1 : 1;
-          var yPositiveOrNegative = Math.random() < 0.5 ? -1 : 1;
-          orb.xVelocity = xPositiveOrNegative * orb.xVelocity;
-          orb.yVelocity = yPositiveOrNegative * orb.yVelocity;
-        });
-      });
+      if (window.DeviceOrientationEvent) {
+        window.addEventListener("deviceorientation", this.orientationHandler, false);
+      } else {
+        alert("Oops!! What user agent u r using???");
+      }
 
       window.addEventListener("resize", e => {
         this.canvas.width = window.innerWidth;
@@ -80,20 +69,44 @@ export default {
       });
     },
 
+    orientationHandler(event) {
+      this.canvas.loc = event;
+      // document.getElementById("alpha").innerHTML = event.alpha;
+      // document.getElementById("beta").innerHTML = event.beta;
+      // document.getElementById("gamma").innerHTML = event.gamma;
+      // document.getElementById("heading").innerHTML = event.webkitCompassHeading;
+      // document.getElementById("accuracy").innerHTML = event.webkitCompassAccuracy;
+
+    },
+    motionHandler(event) {
+      // document.getElementById("interval").innerHTML = event.interval;
+      // var acc = event.acceleration;
+      // document.getElementById("x").innerHTML = acc.x;
+      // document.getElementById("y").innerHTML = acc.y;
+      // document.getElementById("z").innerHTML = acc.z;
+      // var accGravity = event.accelerationIncludingGravity;
+      // document.getElementById("xg").innerHTML = accGravity.x;
+      // document.getElementById("yg").innerHTML = accGravity.y;
+      // document.getElementById("zg").innerHTML = accGravity.z;
+      // var rotationRate = event.rotationRate;
+      // document.getElementById("Ralpha").innerHTML = rotationRate.alpha;
+      // document.getElementById("Rbeta").innerHTML = rotationRate.beta;
+      // document.getElementById("Rgamma").innerHTML = rotationRate.gamma;
+    },
+
     initStage() {
-      this.stageMG = new Stage(this.canvas);
-      this.stageMG.stage1();
+      this.stageMG = new Stage(this.canvas, null, '#2A3B30');
     },
 
     animate() {
       clearTimeout(this.animate);
       setTimeout(this.animate, 10);
 
-      // this.context.fillStyle = "#3c4a61";
-      // this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
-      this.stageMG.stage1();
+      this.context.fillStyle = "#b25d25";
+      this.stageMG.clear();
+      // this.stageMG.stage1();
 
-      this.orbs.forEach(function(orb) {
+      this.orbs.forEach(function (orb) {
         orb.update();
       });
     }

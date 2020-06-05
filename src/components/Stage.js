@@ -1,9 +1,10 @@
-export default function Stage(canvas, collision) {
+export default function Stage(canvas, collision, color) {
     this.canvas = canvas;
+    this.collision = collision;
     this.context = canvas.getContext('2d');
     this.context.strokeStyle = '#eee000';
     this.context.fillStyle = '#057748';
-    this.context.lineWith = 3;
+    // this.context.lineWith = 3;
     this.centerPoint = [this.canvas.width / 2, this.canvas.height / 2];
     this.unitX = this.canvas.width / 9;
     this.unitY = this.canvas.height / 16;
@@ -12,6 +13,14 @@ export default function Stage(canvas, collision) {
     this.clear = function () {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
+
+    this.recover = function() {
+        this.context.strokeStyle = color;
+        this.context.fillStyle = color;
+    }
+
+    this.checkCollision = function(unReachable, gravity) {
+    },
 
     this.stage1 = function () {
         this.clear();
@@ -39,5 +48,7 @@ export default function Stage(canvas, collision) {
         this.context.closePath();
         this.context.stroke();
         this.context.fill();
+
+        this.recover();
     }
 }
