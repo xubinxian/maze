@@ -40,7 +40,7 @@ export default {
       for (var i = 0; i < 1; i++) {
         this.orbs.push(
           new Orb(
-            this.canvas.width / 4,
+            this.canvas.width / 10,
             '#d9b611',
             this.canvas
           )
@@ -102,6 +102,7 @@ export default {
     animate() {
       clearTimeout(this.animate);
       setTimeout(this.animate, 10);
+      this.stageMG.stage1();
 
       this.orbs.forEach(function (orb) {
         orb.update();

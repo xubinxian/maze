@@ -13,7 +13,7 @@ export default function Orb(radius, fillColor, canvas) {
     this.xShift = 0;
     this.yShift = 0;
     this.friction = .83;
-    this.speed = 1.85;
+    this.speed = 2.85;
     this.color0 = {
         r: 234,
         g: 203,
@@ -24,47 +24,48 @@ export default function Orb(radius, fillColor, canvas) {
         g: 78,
         b: 32
     };
-    this.color00 = {
-        r: 22,
-        g: 165,
-        b: 145
-    };
     this.color090 = {
-        r: 242,
-        g: 180,
-        b: 37
-    }
+        r: 255,
+        g: 78,
+        b: 32
+    };
 
     this.update = function () {
         if (this.canvas.orientation) {
             if (canvas.orientation.gamma > 0) {
-                // this.xCoordinate += this.speed;
-                for (let key in this.color0) {
-                    if (this.color0[key] < this.color00[key]) {
-                        this.color0[key] += this.speed;
+                this.xCoordinate += this.speed;
+                if (this.xCoordinate > this.canvas.width - this.radius) {
+                    this.xCoordinate -= 10 + Math.random() * 10;
+                    this.color09 = {
+                        r: 59,
+                        g: 66,
+                        b: 183
                     }
+                } else {
+                    this.color09 = this.color090;
                 }
-            } else  {
-                // this.xCoordinate -= this.speed;
-                for (let key in this.color0) {
-                    if (this.color0[key] > this.color00[key]) {
-                        this.color0[key] -= this.speed
+            } else {
+                this.xCoordinate -= this.speed;
+                if (this.xCoordinate < this.radius) {
+                    this.xCoordinate += 10 + Math.random() * 10;
+                    this.color09 = {
+                        r: 255,
+                        g: 0,
+                        b: 0
                     }
+                } else {
+                    this.color09 = this.color090;
                 }
             }
             if (canvas.orientation.beta > 0) {
-                // this.yCoordinate += this.speed;
-                for (let key in this.color09) {
-                    if (this.color09[key] < this.color090[key]) {
-                        this.color09[key] += this.speed;
-                    }
+                this.yCoordinate += this.speed;
+                if (this.yCoordinate > this.canvas.height - this.radius) {
+                    this.yCoordinate -= 10 + Math.random() * 10;
                 }
             } else {
-                // this.yCoordinate -= this.speed;
-                for (let key in this.color09) {
-                    if (this.color09[key] > this.color090[key]) {
-                        this.color09[key] -= this.speed;
-                    }
+                this.yCoordinate -= this.speed;
+                if (this.yCoordinate < this.radius) {
+                    this.yCoordinate += 10 + Math.random() * 10;
                 }
             }
             // Prevent orbs from going off screen
